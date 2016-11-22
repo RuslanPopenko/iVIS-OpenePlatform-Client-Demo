@@ -11,8 +11,8 @@
     <module>siteprofile</module>
     <module>FlowEngine</module>
     <module>FlowInstancePDFGenerator</module>
-    <module>demo.oeplatform.org</module>
       <module>ivis-oeplatform-client</module>
+      <module>demo.oeplatform.org</module>
   </modules>
   
   <build>
