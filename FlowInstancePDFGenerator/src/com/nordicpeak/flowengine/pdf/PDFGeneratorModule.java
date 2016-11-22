@@ -16,7 +16,6 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import com.lowagie.text.pdf.*;
 import org.apache.jempbox.xmp.XMPMetadata;
 import org.apache.jempbox.xmp.XMPSchemaBasic;
 import org.apache.jempbox.xmp.XMPSchemaDublinCore;
@@ -61,6 +60,10 @@ import se.unlogic.standardutils.xml.XMLUtils;
 import se.unlogic.standardutils.xsl.URIXSLTransformer;
 
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.pdf.PdfFileSpecification;
+import com.lowagie.text.pdf.PdfReader;
+import com.lowagie.text.pdf.PdfStamper;
+import com.lowagie.text.pdf.PdfWriter;
 import com.nordicpeak.flowengine.beans.FlowInstance;
 import com.nordicpeak.flowengine.beans.FlowInstanceEvent;
 import com.nordicpeak.flowengine.beans.PDFQueryResponse;
@@ -90,7 +93,7 @@ public class PDFGeneratorModule extends AnnotatedForegroundModule implements Flo
 	protected String pdfStyleSheet;
 
 	@ModuleSetting
-	@TextFieldSettingDescriptor(name = "Default logotype", description = "The path to the default logotype. The path can be in both filesystem or classpath. Use classpath:// prefix resouces in classpath and file:/ prefix fÃ¶r files in filesystem.", required = true)
+	@TextFieldSettingDescriptor(name = "Default logotype", description = "The path to the default logotype. The path can be in both filesystem or classpath. Use classpath:// prefix resouces in classpath and file:/ prefix för files in filesystem.", required = true)
 	protected String defaultLogotype = "classpath://com/nordicpeak/flowengine/pdf/staticcontent/pics/logo.png";
 
 	@ModuleSetting
@@ -139,8 +142,6 @@ public class PDFGeneratorModule extends AnnotatedForegroundModule implements Flo
 
 	private List<String> actionList;
 	private List<String> fontList;
-
-	private static final String UTF8_ENCODING = "utf8";
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -318,8 +319,7 @@ public class PDFGeneratorModule extends AnnotatedForegroundModule implements Flo
 			if(xmlDebug && xmlDebugFile != null){
 
 				try{
-
-					XMLUtils.writeXMLFile(doc, xmlDebugFile, true, UTF8_ENCODING);
+					XMLUtils.writeXMLFile(doc, xmlDebugFile, true, systemInterface.getEncoding());
 
 				}catch(Exception e){
 
@@ -329,14 +329,14 @@ public class PDFGeneratorModule extends AnnotatedForegroundModule implements Flo
 
 			StringWriter writer = new StringWriter();
 
-			XMLTransformer.transformToWriter(pdfTransformer.getTransformer(), doc, writer, UTF8_ENCODING);
+			XMLTransformer.transformToWriter(pdfTransformer.getTransformer(), doc, writer, systemInterface.getEncoding());
 
-			Document document = XMLUtils.parseXML(writer.toString().replaceAll("ISO-8859-1", "UTF-8"), false, false);
+			Document document = XMLUtils.parseXML(writer.toString(), false, false);
 
 			if(xhtmlDebug && xhtmlDebugFile != null){
 
 				try{
-					XMLUtils.writeXMLFile(document, xhtmlDebugFile, true, UTF8_ENCODING);
+					XMLUtils.writeXMLFile(document, xhtmlDebugFile, true, systemInterface.getEncoding());
 
 				}catch(Exception e){
 
@@ -512,16 +512,9 @@ public class PDFGeneratorModule extends AnnotatedForegroundModule implements Flo
 			callback.setSharedContext(renderer.getSharedContext());
 			renderer.getSharedContext().setUserAgentCallback(callback);
 
-			if(this.fontList != null){
+			renderer.getFontResolver().addFont(includedFonts, "Identity-H", true);
 
-				for(String font : fontList){
-
-					renderer.getFontResolver().addFont(font, BaseFont.IDENTITY_H, true);
-				}
-			}
-
-
-			renderer.setDocument((Document) node, "c:\\users\\unlogic\foo.html");
+			renderer.setDocument((Document)node, "c:\\users\\unlogic\foo.html");
 			renderer.layout();
 
 			renderer.createPDF(basePDFOutputStream);

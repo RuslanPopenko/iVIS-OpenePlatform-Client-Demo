@@ -10,6 +10,7 @@
       <module>fileuploadutils</module>
     <module>siteprofile</module>
     <module>FlowEngine</module>
+    <module>FlowInstancePDFGenerator</module>
     <module>demo.oeplatform.org</module>
       <module>ivis-oeplatform-client</module>
   </modules>
