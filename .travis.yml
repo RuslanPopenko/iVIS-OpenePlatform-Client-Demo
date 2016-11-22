@@ -1,1 +1,6 @@
 language: java
+
+before_install:
+  - git clone https://github.com/bjornharrtell/openhierarchy
+  - cd openhierarchy
+  - sudo mvn clean package install
