@@ -7,13 +7,19 @@
   <packaging>pom</packaging>
   
   <modules>
-      <module>cron4jutils</module>
-      <module>fileuploadutils</module>
+    <module>standardutils</module>
+    <module>webutils</module>
+    <module>emailutils</module>
+    <module>log4jutils</module>
+    <module>purecaptcha</module>
+    <module>fileuploadutils</module>
+    <module>hierarchy</module>
+    <module>cron4jutils</module>
     <module>siteprofile</module>
     <module>FlowEngine</module>
     <module>FlowInstancePDFGenerator</module>
-      <module>ivis-oeplatform-client</module>
-      <module>demo.oeplatform.org</module>
+    <module>ivis-oeplatform-client</module>
+    <module>demo.oeplatform.org</module>
   </modules>
   
   <build>
